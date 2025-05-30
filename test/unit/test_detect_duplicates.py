@@ -1,5 +1,5 @@
 import pytest
-from util.detector import detect_duplicates
+from src.util.detector import detect_duplicates
 # develop your test cases here
 
 @pytest.mark.unit
