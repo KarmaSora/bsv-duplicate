@@ -30,4 +30,3 @@ def detect_duplicates(data: str) -> list[str]:
                     duplicates.append(articles[j])
 
     return duplicates
-d
