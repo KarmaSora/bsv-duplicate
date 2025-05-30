@@ -74,7 +74,7 @@ def test_empty_entry():
         {},
         {"title": "sometihn", "year": "2022", "doi": "10.1234/xyz"},
     ]
-    result = detect_duplicates(data="", articles=articles)
+    result = detect_duplicates(data="", articles=articles) 
     assert len(result) == 0
 
 
