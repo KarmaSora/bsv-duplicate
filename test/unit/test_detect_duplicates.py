@@ -1,7 +1,6 @@
 import pytest
 from src.util.detector import detect_duplicates
-# Import Article for direct value comparison in tests
-from src.util.parser import Article
+from unittest.mock import MagicMock
 
 
 # develop your test cases here
@@ -57,59 +56,62 @@ def test_detect_duplicatesTwoUnique():
 
 @pytest.mark.unit
 def test_detect_duplicatesTwoIdenticalEntries():
-        bibtex_data = """
-        @article{frattini2023requirements,
-            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
-            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
-            journal={Requirements Engineering},
-            pages={1--14},
-            year={2023},
-            publisher={Springer},
-            doi={10.1007/s00766-023-00405-y}
-        }
-        @article{frattini2023requirements,
-            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
-            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
-            journal={Requirements Engineering},
-            pages={1--14},
-            year={2023},
-            publisher={Springer},
-            doi={10.1007/s00766-023-00405-y}
-        }
-        """
+    bibtex_data = """
+    @article{frattini2023requirements,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+        journal={Requirements Engineering},
+        pages={1--14},
+        year={2023},
+        publisher={Springer},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{frattini2023requirements,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+        journal={Requirements Engineering},
+        pages={1--14},
+        year={2023},
+        publisher={Springer},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    """
+    mock_article = MagicMock(key="frattini2023requirements", doi="10.1007/s00766-023-00405-y")
+    from unittest.mock import patch
+    with patch('src.util.parser.Article', return_value=mock_article):
         result = detect_duplicates(bibtex_data)
-        
-        assert len(result) == 1
+        assert result == [mock_article]
 
 
 
 
 @pytest.mark.unit
 def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
-        bibtex_data = """
-        @article{frattini2023requirements,
-            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
-            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
-            journal={Requirements Engineering},
-            pages={1--14},
-            year={2023},
-            publisher={Springer},
-            doi={10.1007/s00766-023-00405-y}
-        }
-        @article{karma,
-            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
-            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
-            journal={Requirements Engineering},
-            pages={1--14},
-            year={2023},
-            publisher={Springer},
-            doi={10.1007/s00766-023-00405-y}
-        }
-
-        """
+    bibtex_data = """
+    @article{frattini2023requirements,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+        journal={Requirements Engineering},
+        pages={1--14},
+        year={2023},
+        publisher={Springer},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{karma,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+        journal={Requirements Engineering},
+        pages={1--14},
+        year={2023},
+        publisher={Springer},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    """
+    mock_article = MagicMock(key="frattini2023requirements", doi="10.1007/s00766-023-00405-y")
+    from unittest.mock import patch
+    with patch('src.util.parser.Article', return_value=mock_article):
         result = detect_duplicates(bibtex_data)
-        
-        assert len(result) == 0
+        assert result == []
 
 
 @pytest.mark.unit
@@ -126,6 +128,9 @@ def test_detect_duplicatesDifferentKeySameDoi():
         doi={10.1007/s00766-023-00405-y}
     }
     """
-    result = detect_duplicates(bibtex_data)
-    assert result == []
+    mock_article = MagicMock(key="key1", doi="10.1007/s00766-023-00405-y")
+    from unittest.mock import patch
+    with patch('src.util.parser.Article', return_value=mock_article):
+        result = detect_duplicates(bibtex_data)
+        assert result == []
 
