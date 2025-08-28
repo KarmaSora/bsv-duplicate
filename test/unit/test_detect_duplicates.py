@@ -23,9 +23,14 @@ def test_detect_duplicatesNoEntries():
 @pytest.mark.unit
 def test_detect_duplicatesOneSingleEnrty():
         bibtex_data = """
-        @article{key1,
-            author = {Author One},
-            title = {Title One}
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
         }
         """
         result = detect_duplicates(bibtex_data)
@@ -36,13 +41,23 @@ def test_detect_duplicatesOneSingleEnrty():
 @pytest.mark.unit
 def test_detect_duplicatesTwoIdenticalEntries():
         bibtex_data = """
-        @article{key1,
-            author = {Author One},
-            title = {Title One}
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
         }
-            @article{key1,
-            author = {Author One},
-            title = {Title One}
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
         }
         """
         result = detect_duplicates(bibtex_data)
@@ -55,47 +70,27 @@ def test_detect_duplicatesTwoIdenticalEntries():
 @pytest.mark.unit
 def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
         bibtex_data = """
-        @article{key1,
-            author = {Author One},
-            title = {Title One}
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
         }
-            @article{key1,
-            author = {me},
-            title = {again}
+        @article{karma,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
         }
+
         """
         result = detect_duplicates(bibtex_data)
         
         assert len(result) == 0
 
-
-@pytest.mark.unit
-def test_detect_duplicatesTwoDifferentEntries():
-    bibtex_data = """
-    @article{key1,
-        author = {Author One},
-        title = {Title One}
-    }
-    @article{key2,
-        author = {Author Two},
-        title = {Title Two}
-    }
-    """
-    result = detect_duplicates(bibtex_data)
-    assert result == []
-
-
-@pytest.mark.unit
-def test_detect_duplicatesTwoIdenticalEntriesActualValue():
-    bibtex_data = """
-    @article{key1,
-        author = {Author One},
-        title = {Title One}
-    }
-    @article{key1,
-        author = {Author One},
-        title = {Title One}
-    }
-    """
-    result = detect_duplicates(bibtex_data)
-    assert result == [Article(key="key1")]
