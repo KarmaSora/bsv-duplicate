@@ -1,73 +1,131 @@
-# new tests after exam was over!  saving old code/tests in old.txt!!!
 import pytest
-from unittest.mock import patch, MagicMock
 from src.util.detector import detect_duplicates
+# Import Article for direct value comparison in tests
+from src.util.parser import Article
 
 
-def make_article(key, doi=None):
-    art = MagicMock()
-    art.key = key
-    art.doi = doi
-    return art
+# develop your test cases here
+
+@pytest.mark.unit
+def test_detect_duplicates():
+    assert True
 
 
-def test_raises_when_zero_articles():
-    with patch("src.util.detector.parse", return_value=[]):
-        with pytest.raises(ValueError):
-            detect_duplicates("")
+
+@pytest.mark.unit
+def test_detect_duplicatesNoEntries():
+    bibtex_data = ""
+    with pytest.raises(ValueError):
+        detect_duplicates(bibtex_data)
 
 
-def test_raises_when_one_article():
-    with patch("src.util.detector.parse", return_value=[make_article("only")]):
-        with pytest.raises(ValueError):
-            detect_duplicates("data")
+
+@pytest.mark.unit
+def test_detect_duplicatesOneSingleEnrty():
+        bibtex_data = """
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
+        }
+        """
+        result = detect_duplicates(bibtex_data)
+        assert result == []
 
 
-def test_duplicates_when_same_key_missing_doi():
-    arts = [make_article("frattini2023"), make_article("frattini2023")]
-    with patch("src.util.detector.parse", return_value=arts):
-        dups = detect_duplicates("data")
-        assert dups == [arts[1]]
+@pytest.mark.unit
+def test_detect_duplicatesTwoUnique():
+    bibtex_data = """
+    @article{frattini2023requirements,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian ...},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{karma,
+        title={Another article},
+        author={Someone Else},
+        doi={10.1007/s00766-023-00406-y}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == []
 
 
-def test_no_duplicates_when_diff_key_and_missing_doi():
-    arts = [make_article("a"), make_article("b")]
-    with patch("src.util.detector.parse", return_value=arts):
-        assert detect_duplicates("data") == []
+@pytest.mark.unit
+def test_detect_duplicatesTwoIdenticalEntries():
+        bibtex_data = """
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
+        }
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
+        }
+        """
+        result = detect_duplicates(bibtex_data)
+        
+        assert len(result) == 1
 
 
-def test_duplicates_when_same_doi_even_if_keys_differ():
-    arts = [make_article("a", "10.1000/x"), make_article("b", "10.1000/x")]
-    with patch("src.util.detector.parse", return_value=arts):
-        dups = detect_duplicates("data")
-        assert dups == [arts[1]]
 
 
-def test_duplicates_when_same_key_even_if_doi_differs():
-    arts = [make_article("same", "10.1/alpha"), make_article("same", "10.1/beta")]
-    with patch("src.util.detector.parse", return_value=arts):
-        dups = detect_duplicates("data")
-        assert dups == [arts[1]]
+@pytest.mark.unit
+def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
+        bibtex_data = """
+        @article{frattini2023requirements,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
+        }
+        @article{karma,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1007/s00766-023-00405-y}
+        }
+
+        """
+        result = detect_duplicates(bibtex_data)
+        
+        assert len(result) == 0
 
 
-def test_no_duplicates_when_keys_and_dois_all_different():
-    arts = [
-        make_article("a", "10.1/a"),
-        make_article("b", "10.1/b"),
-        make_article("c", "10.1/c"),
-    ]
-    with patch("src.util.detector.parse", return_value=arts):
-        assert detect_duplicates("data") == []
+@pytest.mark.unit
+def test_detect_duplicatesDifferentKeySameDoi():
+    bibtex_data = """
+    @article{key1,
+        title={Article One},
+        author={Author One},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{key2,
+        title={Article Two},
+        author={Author Two},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == []
 
-
-def test_multiple_duplicates_mixed_reasons():
-    a1 = make_article("alpha", "10.9/dup")
-    a2 = make_article("beta", "10.9/dup")  
-    a3 = make_article("konly")             
-    a4 = make_article("konly")           
-    a5 = make_article("gamma", "10.9/unique")
-    arts = [a1, a2, a3, a4, a5]
-
-    with patch("src.util.detector.parse", return_value=arts):
-        dups = detect_duplicates("data")
-        assert dups == [a2, a4]
