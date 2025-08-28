@@ -10,5 +10,11 @@ def test_detect_duplicates():
 
 
 
+@pytest.mark.unit
+def test_detect_duplicatesLessThan1():
+    bibtex_data = ""
+    with pytest.raises(ValueError):
+        detect_duplicates(bibtex_data)
+
 
 
