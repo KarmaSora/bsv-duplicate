@@ -111,3 +111,21 @@ def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
         
         assert len(result) == 0
 
+
+@pytest.mark.unit
+def test_detect_duplicatesDifferentKeySameDoi():
+    bibtex_data = """
+    @article{key1,
+        title={Article One},
+        author={Author One},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{key2,
+        title={Article Two},
+        author={Author Two},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == []
+
