@@ -40,15 +40,6 @@ def test_detect_duplicatesOneSingleEnrty():
 @pytest.mark.unit
 def test_detect_duplicatesTwoUnique():
         bibtex_data = """
-        @article{karam,
-            title={legend, test, asklnd},
-            author={ajskdn},
-            journal={Engineering},
-            pages={1--123},
-            year={asd},
-            publisher={lkasdm},
-            doi={18.1057/s02763-063-03405-y}
-        }
         @article{frattini2023requirements,
             title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
             author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
@@ -57,6 +48,16 @@ def test_detect_duplicatesTwoUnique():
             year={2023},
             publisher={Springer},
             doi={10.1007/s00766-023-00405-y}
+        }
+
+        @article{karam,
+            title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+            author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
+            journal={Requirements Engineering},
+            pages={1--14},
+            year={2023},
+            publisher={Springer},
+            doi={10.1047/s00766-023-00205-y}
         }
         """
         result = detect_duplicates(bibtex_data)
