@@ -44,6 +44,24 @@ def test_detect_duplicatesTwoIdenticalEntries():
         }
         """
         result = detect_duplicates(bibtex_data)
+        
         assert len(result) == 1
 
 
+
+
+@pytest.mark.unit
+def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
+        bibtex_data = """
+        @article{key1,
+            author = {Author One},
+            title = {Title One}
+        }
+            @article{key1,
+            author = {me},
+            title = {again}
+        }
+        """
+        result = detect_duplicates(bibtex_data)
+        
+        assert len(result) == 0
