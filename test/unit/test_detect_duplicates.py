@@ -37,7 +37,22 @@ def test_detect_duplicatesOneSingleEnrty():
         assert result == []
 
 
-
+@pytest.mark.unit
+def test_detect_duplicatesTwoUnique():
+    bibtex_data = """
+    @article{frattini2023requirements,
+        title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
+        author={Frattini, Julian ...},
+        doi={10.1007/s00766-023-00405-y}
+    }
+    @article{karma,
+        title={Another article},
+        author={Someone Else},
+        doi={10.1007/s00766-023-00406-y}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == []
 
 
 @pytest.mark.unit
