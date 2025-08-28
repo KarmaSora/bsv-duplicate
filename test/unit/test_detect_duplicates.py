@@ -86,7 +86,7 @@ def test_detect_duplicatesTwoIdenticalEntries():
 
 @pytest.mark.unit
 def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
-    bibtex_data1 = """
+    bibtex_data = """
     @article{frattini2023requirements,
         title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
         author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
@@ -96,8 +96,6 @@ def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
         publisher={Springer},
         doi={10.1007/s00766-023-00405-y}
     }
-    """
-    bibtex_data2 = """
     @article{karma,
         title={Requirements quality research: a harmonized theory, evaluation, and roadmap},
         author={Frattini, Julian and Montgomery, Lloyd and Fischbach, Jannik and Mendez, Daniel and Fucci, Davide and Unterkalmsteiner, Michael},
@@ -108,38 +106,28 @@ def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
         doi={10.1007/s00766-023-00405-y}
     }
     """
-    mock_article1 = MagicMock(key="frattini2023requirements", doi="10.1007/s00766-023-00405-y")
-    mock_article2 = MagicMock(key="karma", doi="10.1007/s00766-023-00405-y")
-    with patch('src.util.parser.Article', return_value=mock_article1):
-        result1 = detect_duplicates(bibtex_data1)
-    with patch('src.util.parser.Article', return_value=mock_article2):
-        result2 = detect_duplicates(bibtex_data2)
-    assert result1 == []
-    assert result2 == []
+    mock_article = MagicMock(key="frattini2023requirements", doi="10.1007/s00766-023-00405-y")
+    with patch('src.util.parser.Article', return_value=mock_article):
+        result = detect_duplicates(bibtex_data)
+        assert result == []
 
 
 @pytest.mark.unit
 def test_detect_duplicatesDifferentKeySameDoi():
-    bibtex_data1 = """
+    bibtex_data = """
     @article{key1,
         title={Article One},
         author={Author One},
         doi={10.1007/s00766-023-00405-y}
     }
-    """
-    bibtex_data2 = """
     @article{key2,
         title={Article Two},
         author={Author Two},
         doi={10.1007/s00766-023-00405-y}
     }
     """
-    mock_article1 = MagicMock(key="key1", doi="10.1007/s00766-023-00405-y")
-    mock_article2 = MagicMock(key="key2", doi="10.1007/s00766-023-00405-y")
-    with patch('src.util.parser.Article', return_value=mock_article1):
-        result1 = detect_duplicates(bibtex_data1)
-    with patch('src.util.parser.Article', return_value=mock_article2):
-        result2 = detect_duplicates(bibtex_data2)
-    assert result1 == []
-    assert result2 == []
+    mock_article = MagicMock(key="key1", doi="10.1007/s00766-023-00405-y")
+    with patch('src.util.parser.Article', return_value=mock_article):
+        result = detect_duplicates(bibtex_data)
+        assert result == []
 
