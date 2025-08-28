@@ -1,5 +1,7 @@
 import pytest
 from src.util.detector import detect_duplicates
+# Import Article for direct value comparison in tests
+from src.util.parser import Article
 
 
 # develop your test cases here
@@ -65,3 +67,35 @@ def test_detect_duplicatesTwoIdenticalEntriesdiffDoi():
         result = detect_duplicates(bibtex_data)
         
         assert len(result) == 0
+
+
+@pytest.mark.unit
+def test_detect_duplicatesTwoDifferentEntries():
+    bibtex_data = """
+    @article{key1,
+        author = {Author One},
+        title = {Title One}
+    }
+    @article{key2,
+        author = {Author Two},
+        title = {Title Two}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == []
+
+
+@pytest.mark.unit
+def test_detect_duplicatesTwoIdenticalEntriesActualValue():
+    bibtex_data = """
+    @article{key1,
+        author = {Author One},
+        title = {Title One}
+    }
+    @article{key1,
+        author = {Author One},
+        title = {Title One}
+    }
+    """
+    result = detect_duplicates(bibtex_data)
+    assert result == [Article(key="key1")]
